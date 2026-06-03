@@ -22,6 +22,19 @@ def selection_sort(arr):
         arr[i], arr[min_idx] = arr[min_idx], arr[i]
     return arr
 
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+
+        arr[j + 1] = key
+    return arr
+
+
 def measure_time(sort_func, data):
     start = time.time()
     sort_func(data.copy())
@@ -30,33 +43,36 @@ def measure_time(sort_func, data):
 sizes = [100, 500, 1000, 1500, 2000]
 bubble_times = []
 selection_times = []
+insertion_times = []
 
 for size in sizes:
     test_data = [random.randint(0, 10000) for _ in range(size)]
     bubble_times.append(measure_time(bubble_sort, test_data))
     selection_times.append(measure_time(selection_sort, test_data))
+    insertion_times.append(measure_time(insertion_sort, test_data))
 
 plt.style.use('bmh')
 plt.figure(figsize=(10, 6))
 plt.plot(sizes, bubble_times, label='Bubble Sort', marker='o')
 plt.plot(sizes, selection_times, label='Selection Sort', marker='s')
-plt.title('Bubble sort vs selection sort')
+plt.plot(sizes, insertion_times, label='Insertion Sort', marker='h')
+plt.title('Bubble sort vs selection sort vs insertion sort')
 plt.xlabel('List size')
 plt.ylabel('Time (seconds)')
 plt.legend()
 plt.grid(True)
-plt.savefig('bubblevsselection_trueperformance.png')
+plt.savefig('n2sorts_trueperformance.png')
 
-if Path("bubblevsselection_bigo.png").is_file() == False:
+if Path("n2sorts_bigo.png").is_file() == False:
     plt.style.use('bmh')
     n = np.linspace(1, 10, 1000)
     plt.figure(figsize=(12, 10))
     plt.ylim(0, 50)
 
-    plt.plot(n, n**2, label="Bubble and selection sort big O notation")
+    plt.plot(n, n**2, label="Bubble, selection and insertion sort big O notation")
 
     plt.legend(loc=0)
     plt.ylabel('Relative Runtime')
     plt.xlabel('Input Size')
     plt.grid(True)
-    plt.savefig('bubblevsselection_bigo.png')
+    plt.savefig('n2sorts_bigo.png')
